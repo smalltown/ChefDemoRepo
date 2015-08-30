@@ -1,0 +1,18 @@
+[submodule "cookbooks/apache2"]
+	path = cookbooks/apache2
+	url = https://github.com/smalltown/apache2.git
+[submodule "cookbooks/iptables"]
+	path = cookbooks/iptables
+	url = https://github.com/smalltown/iptables.git
+[submodule "cookbooks/logrotate"]
+	path = cookbooks/logrotate
+	url = https://github.com/smalltown/logrotate.git
+[submodule "cookbooks/mysql"]
+	path = cookbooks/mysql
+	url = https://github.com/smalltown/mysql.git
+[submodule "cookbooks/yum-mysql-community"]
+	path = cookbooks/yum-mysql-community
+	url = https://github.com/smalltown/yum-mysql-community.git
+[submodule "cookbooks/yum"]
+	path = cookbooks/yum
+	url = https://github.com/smalltown/yum.git
