@@ -1,0 +1,113 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'chef/config'
+require 'chef/log'
+require 'chef/rest'
+
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+
+# connect to chef server varible 
+chef_server_url = 'https://localhost/organizations/devops2015'
+client_name = 'admin'
+signing_key_filename = '../.chef/admin.pem'
+
+# job varible from command line
+job = Hash.new
+push_servers = Array.new
+command = String.new
+
+# servers execute status
+running_servers = Array.new
+crashed_servers = Array.new
+succeeded_servers = Array.new
+fail_servers = Array.new
+nacked_servers = Array.new
+aborted_servers = Array.new
+unavailable_servers = Array.new
+new_servers = Array.new
+ready_servers = Array.new
+
+# Others varible
+query_interval = 30
+retry_interval = 180
+retry_count = 5
+
+# Http Headers
+headers = {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
+options = {"headers" => headers}
+
+# Parse command line parameter
+ARGV.each do |para| 
+
+  if para.match(/(.*):(.*)/)
+    para = para.match(/(.*):(.*)/)
+    command = para[2].to_s
+  else
+    push_servers.push(para)
+  end
+end 
+
+for i in 0..retry_count
+
+  job['command'] = command
+  job['nodes'] = push_servers
+
+  # Push job by Restful API
+  rest = Chef::REST.new(chef_server_url, client_name, signing_key_filename, options)
+  job_info = rest.post_rest("pushy/jobs", job)
+
+  job_id = job_info['uri']
+  job_id = job_id.match(/jobs\/(.*)/)
+  job_id = job_id[1].to_s
+
+  # According to the query_interval to query job status from chef server
+  while TRUE do
+
+    sleep(query_interval)
+
+    job_status = rest.get_rest("pushy/jobs/#{job_id}")
+
+    new_servers = job_status['nodes']['new']
+    ready_servers = job_status['nodes']['ready']
+    running_servers = job_status['nodes']['running']
+    crashed_servers = job_status['nodes']['crashed']
+    succeeded_servers = job_status['nodes']['succeeded']
+    failed_servers = job_status['nodes']['failed']
+    nacked_servers = job_status['nodes']['nacked']
+    aborted_servers = job_status['nodes']['aborted']
+    unavailable_servers = job_status['nodes']['unavailable']
+
+    # If there are servers failing to execute the command
+    unless failed_servers.nil? && nacked_servers.nil? && aborted_servers.nil? && unavailable_servers.nil? 
+      puts job_status
+      abort("\n\nJob #{command} Fail T_T\n\n")
+    end
+
+    # If all the servers complete the job
+    if running_servers.nil? && new_servers.nil? && ready_servers.nil?
+      break
+    end
+  end
+  
+  # If all the servers complete the job and successfully
+  succeeded_servers = succeeded_servers.nil? ? [] : succeeded_servers.sort
+  push_servers = push_servers.nil? ? [] : push_servers.sort
+
+  if succeeded_servers == push_servers
+    puts job_status
+    break
+
+  # Exclude the succeeded server then push the job again
+  else
+   puts job_status
+   push_servers = push_servers - succeeded_servers
+
+   print "\n\nIt's long time to execute job #{command} for below servers...\n\n"
+   puts push_servers
+   print "\n\nWaiting for #{retry_interval} seconds, then try to send out the job #{command} again(#{i+1})\n\n"
+
+   sleep(retry_interval) 
+  end
+
+end

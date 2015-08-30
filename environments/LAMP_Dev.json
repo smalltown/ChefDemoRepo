@@ -1,6 +1,6 @@
 {
-  "name": "LAMP_Beta",
-  "description": "LAMP_Beta",
+  "name": "LAMP_Dev",
+  "description": "LAMP_Dev",
   "cookbook_versions": {
   },
   "json_class": "Chef::Environment",
