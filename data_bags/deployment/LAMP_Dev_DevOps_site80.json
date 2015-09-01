@@ -1,0 +1,14 @@
+{
+  "id": "LAMP_Dev_DevOps_site80",
+
+  "timestamp": {
+    "previous": "0",
+    "current": "0",
+    "deploy": "121434"
+  },
+  "version": {
+    "previous": "none",
+    "current": "none",
+    "deploy": "R01_2.0.0.622"
+  }
+}

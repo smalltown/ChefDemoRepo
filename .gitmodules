@@ -16,3 +16,36 @@
 [submodule "cookbooks/yum"]
 	path = cookbooks/yum
 	url = https://github.com/smalltown/yum.git
+[submodule "cookbooks/database"]
+	path = cookbooks/database
+	url = https://github.com/smalltown/database.git
+[submodule "cookbooks/postgresql"]
+	path = cookbooks/postgresql
+	url = https://github.com/smalltown/postgresql.git
+[submodule "cookbooks/apt"]
+	path = cookbooks/apt
+	url = https://github.com/smalltown/apt.git
+[submodule "cookbooks/build-essential"]
+	path = cookbooks/build-essential
+	url = https://github.com/smalltown/build-essential.git
+[submodule "cookbooks/openssl"]
+	path = cookbooks/openssl
+	url = https://github.com/smalltown/openssl.git
+[submodule "cookbooks/chef-sugar"]
+	path = cookbooks/chef-sugar
+	url = https://github.com/smalltown/chef-sugar.git
+[submodule "cookbooks/aws"]
+	path = cookbooks/aws
+	url = https://github.com/smalltown/aws.git
+[submodule "cookbooks/xfs"]
+	path = cookbooks/xfs
+	url = https://github.com/smalltown/xfs.git
+[submodule "cookbooks/mysql-chef_gem"]
+	path = cookbooks/mysql-chef_gem
+	url = https://github.com/smalltown/mysql-chef_gem.git
+[submodule "cookbooks/LAMP"]
+	path = cookbooks/LAMP
+	url = https://github.com/smalltown/LAMP.git
+[submodule "cookbooks/yum-epel"]
+	path = cookbooks/yum-epel
+	url = https://github.com/smalltown/yum-epel.git

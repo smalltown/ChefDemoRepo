@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'chef/config'
+require 'chef/log'
+require 'chef/rest'
+require 'json'
+
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+
+chef_server_url = 'https://localhost/organizations/devops2015'
+client_name = 'admin'
+signing_key_filename = '../.chef/admin.pem'
+
+# Headers
+headers = {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
+options = {"headers" => headers}
+
+# prepare configuration
+info = Hash.new
+build_project = Array.new
+
+ARGV.each do |para|
+# parse command line parameter
+  para = para.match(/(.*):(.*)/)
+
+  info[para[1].to_s] = para[2].to_s
+end
+
+
+# get data from chef server
+rest = Chef::REST.new(chef_server_url, client_name, signing_key_filename, options)
+deploy_info = rest.get_rest("data/#{info['bag']}/#{info['environment']}_#{info['webapp']}")
+JSON.create_id = ''
+
+deploy_info['timestamp']['deploy'] = info['timestamp']
+deploy_info['version']['deploy'] = info['version']
+
+# update information to chef server
+update_info = rest.put_rest("data/#{info['bag']}/#{info['environment']}_#{info['webapp']}", deploy_info)
+JSON.create_id = ''

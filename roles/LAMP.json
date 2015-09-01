@@ -10,7 +10,10 @@
   },
   "chef_type": "role",
   "run_list": [
-
+     "recipe[LAMP::default]",
+     "recipe[LAMP::apache2]",
+     "recipe[LAMP::php]",
+     "recipe[LAMP::mysql]"
   ],
   "env_run_lists": {
 
